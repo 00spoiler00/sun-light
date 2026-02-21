@@ -2,6 +2,7 @@
 	import SunElevationChart from '$lib/components/SunElevationChart.svelte';
 	import HorizonVisualization from '$lib/components/HorizonVisualization.svelte';
 	import LocationControls from '$lib/components/LocationControls.svelte';
+	import WorldMap from '$lib/components/WorldMap.svelte';
 	import SunInfoPanel from '$lib/components/SunInfoPanel.svelte';
 </script>
 
@@ -21,6 +22,7 @@
 		<!-- Sidebar controls -->
 		<div class="space-y-4 lg:space-y-6">
 			<LocationControls />
+			<WorldMap />
 			<SunInfoPanel />
 		</div>
 	</div>
