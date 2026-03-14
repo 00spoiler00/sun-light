@@ -1,9 +1,15 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import SunElevationChart from '$lib/components/SunElevationChart.svelte';
 	import HorizonVisualization from '$lib/components/HorizonVisualization.svelte';
 	import LocationControls from '$lib/components/LocationControls.svelte';
 	import WorldMap from '$lib/components/WorldMap.svelte';
 	import SunInfoPanel from '$lib/components/SunInfoPanel.svelte';
+	import { sunStore } from '$lib/stores/sun.svelte';
+
+	onMount(() => {
+		sunStore.requestGeolocation();
+	});
 </script>
 
 <div class="min-h-screen p-4 lg:p-6">

@@ -86,6 +86,14 @@
 	<div class="rounded-xl bg-surface-alt border border-border p-4 space-y-3">
 		<h2 class="text-sm font-semibold text-text">Presets</h2>
 		<div class="flex flex-wrap gap-2">
+			<button
+				class="px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors
+					bg-surface border-border text-text-muted hover:bg-surface-hover hover:text-text"
+				onclick={() => sunStore.requestGeolocation()}
+				disabled={sunStore.geolocating}
+			>
+				{sunStore.geolocating ? 'Locating...' : 'My Location'}
+			</button>
 			{#each cityPresets as preset}
 				<button
 					class="px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors

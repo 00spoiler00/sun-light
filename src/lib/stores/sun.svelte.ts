@@ -11,18 +11,36 @@ export const cityPresets: CityPreset[] = [
 	{ name: 'Tokyo', lat: 35.68, lng: 139.69 }
 ];
 
+function getCurrentDayOfYear(): number {
+	const now = new Date();
+	const start = new Date(now.getFullYear(), 0, 0);
+	const diff = now.getTime() - start.getTime();
+	return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
+function getCurrentMinute(): number {
+	const now = new Date();
+	return now.getHours() * 60 + now.getMinutes();
+}
+
+const defaultDay = getCurrentDayOfYear();
+const defaultMinute = getCurrentMinute();
+const defaultLat = 41.39;
+const defaultLng = 2.17;
+
 const springConfig = { stiffness: 0.15, damping: 0.7 };
 
 class SunStore {
-	lat = new Spring(41.39, springConfig);
-	lng = new Spring(2.17, springConfig);
-	dayOfYear = new Spring(172, springConfig);
+	lat = new Spring(defaultLat, springConfig);
+	lng = new Spring(defaultLng, springConfig);
+	dayOfYear = new Spring(defaultDay, springConfig);
 
-	targetLat = $state(41.39);
-	targetLng = $state(2.17);
-	targetDay = $state(172);
+	targetLat = $state(defaultLat);
+	targetLng = $state(defaultLng);
+	targetDay = $state(defaultDay);
 	isDragging = $state(false);
-	currentMinute = $state(720);
+	currentMinute = $state(defaultMinute);
+	geolocating = $state(false);
 
 	get solarData(): SolarDayData {
 		const resolution = this.isDragging ? 288 : 1440;
@@ -60,6 +78,22 @@ class SunStore {
 	applyPreset(preset: CityPreset) {
 		this.setLat(preset.lat);
 		this.setLng(preset.lng);
+	}
+
+	requestGeolocation() {
+		if (typeof navigator === 'undefined' || !navigator.geolocation) return;
+		this.geolocating = true;
+		navigator.geolocation.getCurrentPosition(
+			(pos) => {
+				this.setLat(Math.round(pos.coords.latitude * 100) / 100);
+				this.setLng(Math.round(pos.coords.longitude * 100) / 100);
+				this.geolocating = false;
+			},
+			() => {
+				this.geolocating = false;
+			},
+			{ timeout: 10000 }
+		);
 	}
 }
 
